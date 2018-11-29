@@ -81,7 +81,7 @@ const Toolbar = ({
   setStrokeWidth,
   undo,
   redo
-}: Props) => {
+}) => {
   const strokeMin = 5;
   const strokeMax = 40;
 
