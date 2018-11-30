@@ -26,11 +26,17 @@ const createBrushIndicatorSvg = ({ color, strokeWidth }) =>
     color
   )}"><circle cx="32" cy="32" r="32" /></svg>`;
 
-export default function Canvas({ elements, addElement, color, strokeWidth }) {
+export default function Canvas({
+  elements,
+  addElement,
+  color,
+  strokeWidth,
+  svgRef
+}) {
   const [newElement, setNewElement] = useState(null);
   return (
     <Rect>
-      {({ ref, rect = { width: 0, height: 0 } }) => (
+      {({ ref: rectRef, rect = { width: 0, height: 0 } }) => (
         <Svg
           style={{
             cursor: `url('data:image/svg+xml;utf8,${createBrushIndicatorSvg({
@@ -67,7 +73,10 @@ export default function Canvas({ elements, addElement, color, strokeWidth }) {
               setNewElement(null);
             }
           }}
-          ref={ref}
+          ref={node => {
+            rectRef(node);
+            svgRef(node);
+          }}
           viewBox={`0 0 ${rect.width} ${rect.height}`}
         >
           {elements}

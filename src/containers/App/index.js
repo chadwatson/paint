@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Helmet from "react-helmet";
 import { createGlobalStyle } from "styled-components";
 import Toolbar from "../../components/Toolbar";
@@ -22,10 +22,13 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+const serializer = new XMLSerializer();
+
 export default function App({ colors, defaultColor }) {
   const [color, setColor] = useState(defaultColor);
   const [strokeWidth, setStrokeWidth] = useState(5);
   const [elements, setElements, undo, redo] = useHistoricalState([]);
+  const svgRef = useRef(document.createElement("svg"));
 
   return (
     <>
@@ -41,13 +44,19 @@ export default function App({ colors, defaultColor }) {
           setColor={setColor}
           setStrokeWidth={setStrokeWidth}
           strokeWidth={strokeWidth}
+          svgContents={
+            svgRef.current ? serializer.serializeToString(svgRef.current) : ""
+          }
           undo={undo}
         />
         <Canvas
-          color={color}
-          elements={elements}
           addElement={element => {
             setElements(elements.concat([element]));
+          }}
+          color={color}
+          elements={elements}
+          svgRef={ref => {
+            svgRef.current = ref;
           }}
           strokeWidth={strokeWidth}
         />

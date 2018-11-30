@@ -5,6 +5,7 @@ import Button from "../Button";
 import Range from "../Range";
 import UndoIcon from "../UndoIcon";
 import RedoIcon from "../RedoIcon";
+import DownloadIcon from "../DownloadIcon";
 
 const Root = styled.header`
   display: flex;
@@ -60,7 +61,7 @@ const BrushSizeWrapper = styled.div`
   width: 100%;
   max-width: 200px;
 `;
-const HistoryButtons = styled.div`
+const Buttons = styled.div`
   display: flex;
   align-items: center;
 `;
@@ -72,6 +73,11 @@ const HistoryButton = styled(Button)`
     opacity: 0.25;
   }
 `;
+const DownloadButton = styled.a`
+  display: inline-block;
+  margin-left: 30px;
+  font-size: 40px;
+`;
 
 const Toolbar = ({
   colors,
@@ -80,7 +86,8 @@ const Toolbar = ({
   setColor,
   setStrokeWidth,
   undo,
-  redo
+  redo,
+  svgContents
 }) => {
   const strokeMin = 5;
   const strokeMax = 40;
@@ -109,14 +116,23 @@ const Toolbar = ({
         </BrushSizeWrapper>
       </BrushSettings>
       <Space />
-      <HistoryButtons>
+      <Buttons>
         <HistoryButton disabled={!undo} onClick={undo}>
           <UndoIcon />
         </HistoryButton>
         <HistoryButton disabled={!redo} onClick={redo}>
           <RedoIcon />
         </HistoryButton>
-      </HistoryButtons>
+        <DownloadButton
+          download
+          href={`data:image/svg+xml;base64,${btoa(
+            svgContents.replace(/style=".+;"\s/, "")
+          )}`}
+          title="Download SVG"
+        >
+          <DownloadIcon />
+        </DownloadButton>
+      </Buttons>
     </Root>
   );
 };
